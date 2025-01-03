@@ -27,4 +27,5 @@ export default {
     }),
   after: (data) => http.post("api/order/after", data),
   grade: (data) => http.post("api/order/hard_grade", data),
+  audit: (data) => http.post("api/order/check", data),
 };

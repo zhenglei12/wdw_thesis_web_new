@@ -184,7 +184,7 @@ export default {
         this.alterWordCount = res.alter_word_count;
         this.allFinish = res.all_finish;
         const list = res.list;
-        list.data.forEach((_, i) => (_.id = (this.collection.page - 1) * this.collection.pageSize + i + 1));
+        list.data?.forEach((_, i) => (_.id = (this.collection.page - 1) * this.collection.pageSize + i + 1));
         this.collection.list = list.data;
         this.collection.total = list.total;
         this.collection.loading = false;

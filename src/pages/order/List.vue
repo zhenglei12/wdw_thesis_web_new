@@ -63,41 +63,17 @@
         <span v-else>未提交</span>
       </template>
       <template slot="operate" slot-scope="data">
-        <div class="cus-nowrap">
-          <span v-acl="'order-update'">
-            <a-icon type="edit" title="编辑" @click="toEdit(data)" />
-            <a-divider type="vertical"></a-divider>
-          </span>
-          <span v-acl="'order-edit.name'">
-            <a-icon type="api" title="分配编辑" @click="toAllot(data.id)" />
-            <a-divider type="vertical"></a-divider>
-          </span>
-          <span v-acl="'order-manuscript'">
-            <a-icon type="upload" title="上传稿件" @click="toUpload(data.id)" />
-            <a-divider type="vertical"></a-divider>
-          </span>
-          <span v-acl="'order-logs'">
-            <a-icon type="file" title="日志" @click="toLog(data.id)" />
-            <a-divider type="vertical"></a-divider>
-          </span>
-          <span v-acl="'order-delete'" class="cus-pointer">
-            <a-popconfirm title="确认删除？" @confirm="toDelete(data.id)">
-              <a-icon type="delete" title="删除" />
-            </a-popconfirm>
-            <a-divider type="vertical"></a-divider>
-          </span>
-          <span v-acl="'order-status'">
-            <a-icon type="swap" title="修改状态" @click="toStatus(data)" />
-            <a-divider type="vertical"></a-divider>
-          </span>
-          <span v-acl="'order-after'">
-            <a-icon type="rocket" title="售后" @click="toAfter(data)" />
-            <a-divider type="vertical"></a-divider>
-          </span>
-          <span v-acl="'order-hard.grade'">
-            <a-icon type="stock" title="难度" @click="toGrade(data)" />
-          </span>
-        </div>
+        <a-button v-acl="'order-update'" type="link" @click="toEdit(data)">编辑</a-button>
+        <a-button v-acl="'order-edit.name'" type="link" @click="toAllot(data.id)">分配编辑</a-button>
+        <a-button v-acl="'order-manuscript'" type="link" @click="toUpload(data.id)">上传稿件</a-button>
+        <a-button v-acl="'order-logs'" type="link" @click="toLog(data.id)">日志</a-button>
+        <a-popconfirm title="确认删除？" @confirm="toDelete(data.id)">
+          <a-button type="link">删除</a-button>
+        </a-popconfirm>
+        <a-button v-acl="'order-status'" type="link" @click="toStatus(data)">修改状态</a-button>
+        <a-button v-acl="'order-after'" type="link" @click="toAfter(data)">售后</a-button>
+        <a-button v-acl="'order-hard.grade'" type="link" @click="toGrade(data)">难度</a-button>
+        <a-button v-acl="'order-check'" type="link" @click="toAudit(data)">财务审核</a-button>
       </template>
     </a-table>
 
@@ -113,13 +89,6 @@
     <!-- 上传稿件 -->
     <cus-upload v-model="uploadVisible" :data="temp" :classifyList="classifyList" @refresh="_getList"></cus-upload>
 
-    <!-- 详情 -->
-    <!-- <cus-detail
-      v-model="detailVisible"
-      :data="temp"
-      @refresh="_getList"
-    ></cus-detail> -->
-
     <!-- 图片预览 -->
     <img-preview v-model="previewVisible" :urls="previewUrl"></img-preview>
 
@@ -130,6 +99,9 @@
 
     <!-- 难度 -->
     <cus-grade v-model="gradeVisible" :data="temp" @refresh="_getList" />
+
+    <!-- 审核 -->
+    <cus-audit v-model="auditVisible" :data="temp" @refresh="_getList" />
   </div>
 </template>
 
@@ -172,6 +144,12 @@ const condition = [
     options: [],
     labelKey: "name",
     valueKey: "name",
+  },
+  {
+    key: "type",
+    type: "select",
+    placeholder: "审核状态",
+    options: Utils.mapToArray(auditTypeMap),
   },
   {
     key: "classify_id",
@@ -312,6 +290,11 @@ const columns = [
     scopedSlots: { customRender: "image" },
   },
   {
+    title: "备注说明",
+    hidden: ["finance", "admin"],
+    dataIndex: "remark",
+  },
+  {
     title: "财务审核",
     dataIndex: "finance_check",
     customRender: (v) => (v == 1 ? "是" : "否"),
@@ -323,6 +306,14 @@ const columns = [
   {
     title: "责任编辑",
     dataIndex: "edit_name",
+  },
+  {
+    title: "稿件进度",
+    dataIndex: "manuscript_plan",
+  },
+  {
+    title: "编辑留言",
+    dataIndex: "edit_remark",
   },
   {
     title: "操作",
@@ -341,7 +332,8 @@ import CusUpload from "./Upload";
 import CusLog from "./Log";
 import CusAfter from "./After";
 import CusGrade from "./Grade";
-import { taskTypeMap, orderStatusMap, eduMap } from "./mapping";
+import CusAudit from "./Audit";
+import { taskTypeMap, orderStatusMap, eduMap, auditTypeMap } from "./mapping";
 
 export default {
   components: {
@@ -352,6 +344,7 @@ export default {
     CusLog,
     CusAfter,
     CusGrade,
+    CusAudit,
   },
   mixins: [listMixin],
   data() {
@@ -370,6 +363,7 @@ export default {
       logVisible: false,
       afterVisible: false,
       gradeVisible: false,
+      auditVisible: false,
       previewUrl: "",
       editorList: [],
       classifyList: [],
@@ -469,6 +463,10 @@ export default {
     toEdit(e) {
       this.temp = e;
       this.editVisible = true;
+    },
+    toAudit(e) {
+      this.temp = e;
+      this.auditVisible = true;
     },
     toPreview(e) {
       this.previewUrl = e;

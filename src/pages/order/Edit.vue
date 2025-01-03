@@ -61,24 +61,12 @@
           </a-form-model-item>
         </a-col>
       </a-row>
-      <a-row> </a-row>
       <a-row>
         <a-col span="12">
-          <a-form-model-item label="订单总额">
-            <a-input-number v-model="form.amount" :min="0" :disabled="!($auth.isFinance || $auth.isAdmin) && isEdit" />
+          <a-form-model-item label="店铺账号">
+            <a-input v-model="form.shop_name" allow-clear />
           </a-form-model-item>
         </a-col>
-        <a-col span="12">
-          <a-form-model-item label="已收定金">
-            <a-input-number
-              v-model="form.received_amount"
-              :min="0"
-              :disabled="!($auth.isFinance || $auth.isAdmin) && isEdit"
-            />
-          </a-form-model-item>
-        </a-col>
-      </a-row>
-      <a-row>
         <a-col span="12">
           <a-form-model-item label="收款账户">
             <a-select
@@ -89,9 +77,21 @@
             ></a-select>
           </a-form-model-item>
         </a-col>
-        <a-col span="12">
-          <a-form-model-item label="店铺账号">
-            <a-input v-model="form.shop_name" allow-clear />
+      </a-row>
+      <a-row>
+        <a-col span="8">
+          <a-form-model-item :label-col="{ span: 9 }" :wrapper-col="{ span: 13 }" label="订单总额">
+            <a-input-number v-model="form.amount" :min="0" :disabled="$auth.isService && isEdit" />
+          </a-form-model-item>
+        </a-col>
+        <a-col span="8">
+          <a-form-model-item :label-col="{ span: 9 }" :wrapper-col="{ span: 13 }" label="已收定金">
+            <a-input-number v-model="form.received_amount" :min="0" :disabled="$auth.isService && isEdit" />
+          </a-form-model-item>
+        </a-col>
+        <a-col span="8">
+          <a-form-model-item :label-col="{ span: 9 }" :wrapper-col="{ span: 13 }" label="已收尾款">
+            <a-input-number v-model="form.trail_account" :min="0" :disabled="$auth.isService && isEdit" />
           </a-form-model-item>
         </a-col>
       </a-row>
@@ -162,6 +162,14 @@
           </a-form-model-item>
         </a-col>
       </a-row>
+      <a-form-model-item
+        v-if="$auth.isFinance || $auth.isAdmin"
+        :label-col="{ span: 3 }"
+        :wrapper-col="{ span: 20 }"
+        label="备注说明"
+      >
+        <a-textarea v-model="form.remark" :autoSize="{ minRows: 3, maxRows: 5 }" placeholder="备注说明" />
+      </a-form-model-item>
     </a-form-model>
   </a-modal>
 </template>
