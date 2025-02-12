@@ -1,10 +1,11 @@
 const nameMap = {
   staff: "销售统计",
-  edit: "编辑统计",
+  edit: "财务统计",
   classify: "文档管理",
   order: "订单管理",
   role: "角色管理",
   user: "用户管理",
+  deparment: "部门管理",
 };
 
 class Permission {

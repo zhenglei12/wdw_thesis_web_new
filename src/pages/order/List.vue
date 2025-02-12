@@ -62,18 +62,33 @@
         <a v-if="data" @click="toDownload(data)">下载稿件</a>
         <span v-else>未提交</span>
       </template>
+      <template slot="check" slot-scope="data">
+        <span v-if="data == 1" style="color: red">是</span>
+        <span v-else>否</span>
+      </template>
       <template slot="operate" slot-scope="data">
-        <a-button v-acl="'order-update'" type="link" @click="toEdit(data)">编辑</a-button>
-        <a-button v-acl="'order-edit.name'" type="link" @click="toAllot(data.id)">分配编辑</a-button>
-        <a-button v-acl="'order-manuscript'" type="link" @click="toUpload(data.id)">上传稿件</a-button>
-        <a-button v-acl="'order-logs'" type="link" @click="toLog(data.id)">日志</a-button>
-        <a-popconfirm title="确认删除？" @confirm="toDelete(data.id)">
-          <a-button type="link">删除</a-button>
-        </a-popconfirm>
-        <a-button v-acl="'order-status'" type="link" @click="toStatus(data)">修改状态</a-button>
-        <a-button v-acl="'order-after'" type="link" @click="toAfter(data)">售后</a-button>
-        <a-button v-acl="'order-hard.grade'" type="link" @click="toGrade(data)">难度</a-button>
-        <a-button v-acl="'order-check'" type="link" @click="toAudit(data)">财务审核</a-button>
+        <div class="actions">
+          <!-- <a-button v-acl="'order-update'" type="link" @click="toEdit(data)">编辑</a-button> -->
+          <a-icon v-acl="'order-update'" type="edit" title="编辑" @click="toEdit(data)" />
+          <!-- <a-button v-acl="'order-edit.name'" type="link" @click="toAllot(data.id)">分配编辑</a-button> -->
+          <a-icon type="api" title="分配编辑" @click="toAllot(data.id)" />
+          <!-- <a-button v-acl="'order-manuscript'" type="link" @click="toUpload(data.id)">上传稿件</a-button> -->
+          <a-icon type="upload" title="上传稿件" @click="toUpload(data.id)" />
+          <!-- <a-button v-acl="'order-logs'" type="link" @click="toLog(data.id)">日志</a-button> -->
+          <a-icon type="file" title="日志" @click="toLog(data.id)" />
+          <a-popconfirm title="确认删除？" @confirm="toDelete(data.id)">
+            <!-- <a-button type="link">删除</a-button> -->
+            <a-icon type="delete" title="删除" />
+          </a-popconfirm>
+          <!-- <a-button v-acl="'order-status'" type="link" @click="toStatus(data)">修改状态</a-button> -->
+          <a-icon type="swap" title="修改状态" @click="toStatus(data)" />
+          <!-- <a-button v-acl="'order-after'" type="link" @click="toAfter(data)">售后</a-button> -->
+          <a-icon type="rocket" title="售后" @click="toAfter(data)" />
+          <!-- <a-button v-acl="'order-hard.grade'" type="link" @click="toGrade(data)">难度</a-button> -->
+          <a-icon type="stock" title="难度" @click="toGrade(data)" />
+          <!-- <a-button v-acl="'order-check'" type="link" @click="toAudit(data)">财务审核</a-button> -->
+          <a-icon type="safety" title="财务审核" @click="toAudit(data)" />
+        </div>
       </template>
     </a-table>
 
@@ -87,7 +102,7 @@
     <cus-status v-model="statusVisible" :data="temp" @refresh="_getList"></cus-status>
 
     <!-- 上传稿件 -->
-    <cus-upload v-model="uploadVisible" :data="temp" :classifyList="classifyList" @refresh="_getList"></cus-upload>
+    <cus-upload v-model="uploadVisible" :data="temp" @refresh="_getList"></cus-upload>
 
     <!-- 图片预览 -->
     <img-preview v-model="previewVisible" :urls="previewUrl"></img-preview>
@@ -152,13 +167,10 @@ const condition = [
     options: Utils.mapToArray(auditTypeMap),
   },
   {
-    key: "classify_id",
-    type: "cascader",
-    placeholder: "文档分类",
-    changeOnSelect: true,
-    options: [],
-    labelKey: "name",
-    valueKey: "id",
+    key: "manuscript_content",
+    type: "select",
+    placeholder: "内容类型",
+    options: Utils.mapToArray(contentMap),
   },
   {
     key: "status",
@@ -167,8 +179,26 @@ const condition = [
     placeholder: "状态",
   },
   {
+    key: "finance_check",
+    type: "select",
+    options: Utils.mapToArray(auditStatusMap),
+    placeholder: "财务审核",
+  },
+  {
+    key: "trail_check",
+    type: "select",
+    options: Utils.mapToArray(auditStatusMap),
+    placeholder: "尾款审核",
+  },
+  {
     key: "_date",
     type: "date-in",
+  },
+  {
+    key: "_today",
+    type: "select",
+    placeholder: "今日任务",
+    options: [{ label: "是", value: true }],
   },
   // {
   //   key: "_time",
@@ -202,7 +232,6 @@ const columns = [
   },
   {
     title: "客户名称",
-    hidden: ["edit"],
     dataIndex: "name",
   },
   {
@@ -295,13 +324,14 @@ const columns = [
     dataIndex: "remark",
   },
   {
-    title: "财务审核",
+    title: "定金审核",
     dataIndex: "finance_check",
-    customRender: (v) => (v == 1 ? "是" : "否"),
+    scopedSlots: { customRender: "check" },
   },
   {
-    title: "创建客服",
-    dataIndex: "staff_name",
+    title: "尾款审核",
+    dataIndex: "trail_check",
+    scopedSlots: { customRender: "check" },
   },
   {
     title: "责任编辑",
@@ -310,6 +340,7 @@ const columns = [
   {
     title: "稿件进度",
     dataIndex: "manuscript_plan",
+    customRender: (v) => planMap[v] ?? "-",
   },
   {
     title: "编辑留言",
@@ -333,7 +364,8 @@ import CusLog from "./Log";
 import CusAfter from "./After";
 import CusGrade from "./Grade";
 import CusAudit from "./Audit";
-import { taskTypeMap, orderStatusMap, eduMap, auditTypeMap } from "./mapping";
+import { taskTypeMap, orderStatusMap, eduMap, auditTypeMap, contentMap, planMap, auditStatusMap } from "./mapping";
+import * as moment from "moment";
 
 export default {
   components: {
@@ -366,7 +398,6 @@ export default {
       auditVisible: false,
       previewUrl: "",
       editorList: [],
-      classifyList: [],
       download: false,
     };
   },
@@ -380,28 +411,6 @@ export default {
     PublicApi.roleUserList("edit").then((res) => {
       let temp = this.condition.find((_) => _.key == "edit_name");
       this.editorList = res.list;
-      if (temp) {
-        temp.options = res.list;
-      }
-    });
-    PublicApi.documentClassify({
-      page: 1,
-      pageSize: 200,
-    }).then((res) => {
-      function fmtList(list, level = 1) {
-        return list.map((_) => {
-          _.level = level;
-          if (_.children && _.children.length) {
-            _.children = fmtList(_.children, level + 1);
-          } else {
-            _.isLeaf = true;
-            delete _.children;
-          }
-          return _;
-        });
-      }
-      let temp = this.condition.find((_) => _.key == "classify_id");
-      this.classifyList = fmtList(res.list);
       if (temp) {
         temp.options = res.list;
       }
@@ -508,27 +517,13 @@ export default {
     _getList() {
       this.getStatistic();
       this.collection.loading = true;
-      const _search = JSON.parse(JSON.stringify(this.search));
-      if (_search && _search._date) {
-        _search.created_at = _search._date[0];
-        _search.end_time = _search._date[1];
-      }
-      if (_search && _search._time) {
-        _search.submission_time = _search._time[0];
-        _search.submission_end_time = _search._time[1];
-      }
-      if (_search && _search.classify_id) {
-        _search.classify_id = _search.classify_id.push();
-      }
       OrderApi.list(
         Object.assign(
           {
             page: this.collection.page,
             pageSize: this.collection.pageSize,
-            staff_name: this.$auth.isService ? this.$auth.user().name : undefined,
-            edit_name: this.$auth.isEditor ? this.$auth.user().name : undefined,
           },
-          _search
+          this._getSearch()
         )
       ).then((res) => {
         this.collection.list = res.list;
@@ -536,29 +531,26 @@ export default {
         this.collection.loading = false;
       });
     },
-    toExport() {
+    _getSearch() {
       const _search = JSON.parse(JSON.stringify(this.search));
-      if (_search && _search._date) {
+      if (!_search) return;
+      if (_search._date) {
         _search.created_at = _search._date[0];
         _search.end_time = _search._date[1];
       }
-      if (_search && _search._time) {
-        _search.submission_time = _search._date[0];
-        _search.submission_end_time = _search._date[1];
+      if (_search._today) {
+        _search.submission_time = moment().format("YYYY-MM-DD");
       }
-      if (_search && _search.classify_id) {
-        _search.classify_id = _search.classify_id.push();
-      }
+      return _search;
+    },
+    toExport() {
       OrderApi.export(
         Object.assign(
-          {},
           {
             page: this.collection.page,
             pageSize: this.collection.pageSize,
-            staff_name: this.$auth.isService ? this.$auth.user().name : undefined,
-            edit_name: this.$auth.isEditor ? this.$auth.user().name : undefined,
           },
-          _search
+          this._getSearch()
         )
       ).then((res) => {
         if (res.type === "application/json") {
@@ -644,5 +636,10 @@ export default {
 
 /deep/ tr > td {
   max-width: 300px;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
 }
 </style>

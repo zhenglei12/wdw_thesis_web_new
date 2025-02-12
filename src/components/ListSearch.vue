@@ -1,10 +1,6 @@
 <template>
   <a-form-model layout="inline" :model="form">
-    <a-form-model-item
-      v-for="(item, index) in condition"
-      :key="index"
-      :label="item.label"
-    >
+    <a-form-model-item v-for="(item, index) in condition" :key="index" :label="item.label">
       <a-date-picker
         v-if="item.type === 'date'"
         v-model="form[item.key]"
@@ -105,6 +101,9 @@ export default {
     },
   },
   methods: {
+    setValue(key, value) {
+      this.form[key] = value;
+    },
     delaySubmit() {
       if (this.timer) {
         clearTimeout(this.timer);

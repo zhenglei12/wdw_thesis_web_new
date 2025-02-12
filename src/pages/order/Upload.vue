@@ -2,16 +2,11 @@
   <a-modal :visible="visible" title="上传稿件" destroyOnClose :confirmLoading="loading" @cancel="close" @ok="submit">
     <a-form-model ref="form" :model="form" :label-col="{ span: 4 }" :wrapper-col="{ span: 19 }">
       <a-form-model-item label="内容类型" required>
-        <a-cascader
-          :default-value="form.classify_id"
-          v-model="form.classify_id"
-          :options="classifyList"
-          placeholder="内容类型"
-          :fieldNames="{
-            label: 'name',
-            value: 'id',
-            children: 'children',
-          }"
+        <a-select
+          v-model="form.manuscript_content"
+          allowClear
+          :dropdownMatchSelectWidth="false"
+          :options="contentOpts"
         />
       </a-form-model-item>
       <a-form-model-item label="稿件进度" required>
@@ -37,23 +32,18 @@
 import editMixin from "../../mixins/edit";
 import OrderApi from "../../apis/order";
 import upload from "../../libs/upload";
-import { planMap } from "./mapping";
+import { planMap, contentMap } from "./mapping";
 import utils from "../../libs/utils";
 
 export default {
   mixins: [editMixin],
-  props: {
-    classifyList: {
-      type: Array,
-      default: () => [],
-    },
-  },
   data() {
     return {
       loading: false,
       fileList: [],
       form: {},
       planOpts: utils.mapToArray(planMap),
+      contentOpts: utils.mapToArray(contentMap),
     };
   },
   watch: {

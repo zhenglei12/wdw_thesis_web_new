@@ -46,6 +46,14 @@ export const planMap = {
   7: "其他制作",
 };
 
+// 论文，征文，office，其他
+export const contentMap = {
+  论文: "论文",
+  征文: "征文",
+  office: "office",
+  其他: "其他",
+};
+
 // 1时候是定金审核2为尾款审核
 export const auditTypeMap = {
   1: "定金审核",
@@ -53,6 +61,6 @@ export const auditTypeMap = {
 };
 
 export const auditStatusMap = {
-  1: "通过",
-  "-1": "拒绝",
+  1: "是",
+  "-1": "否",
 };

@@ -10,10 +10,11 @@
   >
     <a-form-model ref="form" :model="form" :label-col="{ span: 4 }" :wrapper-col="{ span: 19 }">
       <a-form-model-item label="退款金额" required>
-        <a-input-number v-model="form.after_banlace"  style="width: 200px" />
+        <a-input-number v-model="form.after_banlace" style="width: 200px" />
       </a-form-model-item>
       <a-form-model-item label="退款凭证">
         <a-upload
+          :disabled="!($auth.isAdmin || $auth.isFinance)"
           list-type="picture-card"
           :file-list="fileList"
           :customRequest="(e) => cusUpload(e)"
