@@ -50,10 +50,11 @@
           <a-icon type="hdd" />
           <span>文档管理</span>
         </a-menu-item>
-        <a-sub-menu v-acl:one="['user-list', 'role-list', 'permission-list']" key="user">
+        <a-sub-menu v-acl:one="['user-list', 'role-list', 'permission-list', 'department-list']" key="user">
           <span slot="title"><a-icon type="user" /><span>员工管理</span></span>
           <a-menu-item v-acl="'user-list'" key="person" @click="goto('/person')">用户列表</a-menu-item>
           <a-menu-item v-acl="'role-list'" key="role" @click="goto('/role')">角色列表</a-menu-item>
+          <a-menu-item v-acl="'department-list'" key="department" @click="goto('/department')">部门列表</a-menu-item>
         </a-sub-menu>
       </a-menu>
     </a-layout-sider>
