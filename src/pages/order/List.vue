@@ -71,23 +71,23 @@
           <!-- <a-button v-acl="'order-update'" type="link" @click="toEdit(data)">编辑</a-button> -->
           <a-icon v-acl="'order-update'" type="edit" title="编辑" @click="toEdit(data)" />
           <!-- <a-button v-acl="'order-edit.name'" type="link" @click="toAllot(data.id)">分配编辑</a-button> -->
-          <a-icon type="api" title="分配编辑" @click="toAllot(data.id)" />
+          <a-icon v-acl="'order-edit.name'" type="api" title="分配编辑" @click="toAllot(data.id)" />
           <!-- <a-button v-acl="'order-manuscript'" type="link" @click="toUpload(data.id)">上传稿件</a-button> -->
-          <a-icon type="upload" title="上传稿件" @click="toUpload(data.id)" />
+          <a-icon v-acl="'order-manuscript'" type="upload" title="上传稿件" @click="toUpload(data.id)" />
           <!-- <a-button v-acl="'order-logs'" type="link" @click="toLog(data.id)">日志</a-button> -->
-          <a-icon type="file" title="日志" @click="toLog(data.id)" />
-          <a-popconfirm title="确认删除？" @confirm="toDelete(data.id)">
+          <a-icon v-acl="'order-logs'" type="file" title="日志" @click="toLog(data.id)" />
+          <a-popconfirm v-acl="'order-delete'" title="确认删除？" @confirm="toDelete(data.id)">
             <!-- <a-button type="link">删除</a-button> -->
             <a-icon type="delete" title="删除" />
           </a-popconfirm>
           <!-- <a-button v-acl="'order-status'" type="link" @click="toStatus(data)">修改状态</a-button> -->
-          <a-icon type="swap" title="修改状态" @click="toStatus(data)" />
+          <a-icon v-acl="'order-status'" type="swap" title="修改状态" @click="toStatus(data)" />
           <!-- <a-button v-acl="'order-after'" type="link" @click="toAfter(data)">售后</a-button> -->
-          <a-icon type="rocket" title="售后" @click="toAfter(data)" />
+          <a-icon v-acl="'order-after'" type="rocket" title="售后" @click="toAfter(data)" />
           <!-- <a-button v-acl="'order-hard.grade'" type="link" @click="toGrade(data)">难度</a-button> -->
-          <a-icon type="stock" title="难度" @click="toGrade(data)" />
+          <a-icon v-acl="'order-hard.grade'" type="stock" title="难度" @click="toGrade(data)" />
           <!-- <a-button v-acl="'order-check'" type="link" @click="toAudit(data)">财务审核</a-button> -->
-          <a-icon type="safety" title="财务审核" @click="toAudit(data)" />
+          <a-icon v-acl="'order-check'" type="safety" title="财务审核" @click="toAudit(data)" />
         </div>
       </template>
     </a-table>
