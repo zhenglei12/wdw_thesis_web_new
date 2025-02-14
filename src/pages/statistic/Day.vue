@@ -14,7 +14,7 @@
           <span>完成篇数：{{ allFinish }}</span>
         </span>
       </div>
-      <a-button v-acl="'staff-statistics.export'" type="primary" @click="toExport()">导出</a-button>
+      <a-button v-acl="'edit-statistics.day.export'" type="primary" @click="toExport()">导出</a-button>
     </div>
     <a-table
       :columns="columns"
@@ -128,9 +128,8 @@ export default {
         _search.end_time = _search._date[1];
         delete _search._date;
       }
-      StatisticApi.export(
+      StatisticApi.dayExport(
         Object.assign(
-          {},
           {
             page: this.collection.page,
             pageSize: this.collection.pageSize,

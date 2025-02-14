@@ -21,12 +21,7 @@
           <span>订单管理</span>
         </a-menu-item>
         <a-sub-menu
-          v-acl:one="[
-            'edit-statistics.all.list',
-            'edit-statistics.day.list',
-            'staff-statistics.list',
-            'edit-statistics.order.list',
-          ]"
+          v-acl:one="['edit-statistics.all.list', 'edit-statistics.day.list', 'edit-statistics.list']"
           key="statistic"
         >
           <span slot="title">
@@ -39,12 +34,12 @@
           <a-menu-item v-acl="'edit-statistics.day.list'" key="statistic-day" @click="goto('/statistic/day')"
             >编辑统计</a-menu-item
           >
-          <a-menu-item v-acl="'staff-statistics.list'" key="statistic-user" @click="goto('/statistic/user')"
+          <a-menu-item v-acl="'edit-statistics.list'" key="statistic-user" @click="goto('/statistic/user')"
             >销售统计</a-menu-item
           >
-          <a-menu-item v-acl="'edit-statistics.order.list'" key="statistic-order" @click="goto('/editorder')"
+          <!-- <a-menu-item v-acl="'edit-statistics.order.list'" key="statistic-order" @click="goto('/statistic/order')"
             >编辑订单列表</a-menu-item
-          >
+          > -->
         </a-sub-menu>
         <a-menu-item v-acl="'classify-list'" key="classify" @click="goto('/classify')">
           <a-icon type="hdd" />

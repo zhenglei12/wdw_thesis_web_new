@@ -79,7 +79,7 @@ const routes = [
         component: () => import("./pages/statistic/User"),
       },
       {
-        path: "editorder",
+        path: "statistic/order",
         name: "statistic-order",
         component: () => import("./pages/statistic/Order"),
       },

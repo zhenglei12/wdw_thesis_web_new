@@ -14,7 +14,7 @@
           <span>具体篇数：{{ allFinish }}</span>
         </span>
       </div>
-      <a-button v-acl="'staff-statistics.export'" type="primary" @click="toExport()">导出</a-button>
+      <a-button v-acl="'edit-statistics.export'" type="primary" @click="toExport()">导出</a-button>
     </div>
     <a-table
       :columns="columns"
