@@ -83,7 +83,7 @@ export default {
           _search
         )
       ).then((res) => {
-        this.collection.list = [list];
+        this.collection.list = [res];
         this.collection.total = 1;
         this.collection.loading = false;
       });
