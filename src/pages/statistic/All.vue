@@ -83,8 +83,8 @@ export default {
           _search
         )
       ).then((res) => {
-        this.collection.list = res.list;
-        this.collection.total = res.total;
+        this.collection.list = [list];
+        this.collection.total = 1;
         this.collection.loading = false;
       });
     },
